@@ -1,4 +1,6 @@
 import webbrowser
+import SimpleHTTPServer
+import SocketServer
 import os
 import re
 
@@ -152,16 +154,27 @@ def create_movie_tiles_content(movies):
 
 def open_movies_page(movies):
     # Create or overwrite the output file
-    output_file = open('fresh_tomatoes.html', 'w')
+    #output_file = open('fresh_tomatoes.html', 'w')
+    output_file = open('index.html', 'w')
 
     # Replace the movie tiles placeholder generated content
     rendered_content = main_page_content.format(
         movie_tiles=create_movie_tiles_content(movies))
 
-    # Output the file
+    # Output the file 
     output_file.write(main_page_head + rendered_content)
     output_file.close()
 
     # open the output file in the browser (in a new tab, if possible)
     url = os.path.abspath(output_file.name)
-    webbrowser.open('file://' + url, new=2)
+    #webbrowser.open('file://' + url, new=2)
+        
+    PORT = 8080
+    Handler = SimpleHTTPServer.SimpleHTTPRequestHandler
+    
+    httpd = SocketServer.TCPServer(("", PORT), Handler)
+    httpd.serve_forever()
+
+    webbrowser.open("http://www.localhost.com:8080/", new=2)
+    
+    
